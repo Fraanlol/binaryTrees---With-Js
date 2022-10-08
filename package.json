@@ -1,0 +1,20 @@
+{
+  "name": "binarytrees---with-js",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fraanlol/binaryTrees---With-Js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fraanlol/binaryTrees---With-Js/issues"
+  },
+  "homepage": "https://github.com/Fraanlol/binaryTrees---With-Js#readme"
+}
