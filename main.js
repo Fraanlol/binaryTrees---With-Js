@@ -1,10 +1,25 @@
-import * as sort from './sortFunctions.js'
+/* This program will build a binary tree with a given array of numbers */
 
-const  noDuplicates = arr =>{
+/* First I need to create nodes */
+
+import * as sort from "./sortFunctions.js";
+
+const newNode = (n) => {
+    let data = n;
+    let left = null;
+    let right = null;
+
+    return{data,right,left}
+}
+
+/* Then I need to make sure there's no duplicates on the array */
+
+const noDuplicates = numbersArray => {
+
     let tempArr = [];
-
-    arr.forEach((key,index) => {
-        if(arr.indexOf(key) === index){
+        /* If you run indexOf on an array item, it will return the first index to it, so this ensures there's no dups*/
+    numbersArray.forEach((key,index) => {
+        if(numbersArray.indexOf(key) === index){
             tempArr.push(key);
         }
     })
@@ -12,20 +27,42 @@ const  noDuplicates = arr =>{
     return tempArr;
 }
 
-const newNode = (value) => {
-    let data = value;
-    let left = null;
-    let right = null;
+/* Now I've to build the tree recursively */
 
-    return{data,left,right}
+const buildTree = (arr,l,r) => {
+    if (l > r) return null;
+    let mid = l + parseInt(((r-l)/2));
+    let root = newNode(arr[mid]);
+    root.left = buildTree(arr,l,mid-1);
+    root.right = buildTree(arr,mid+1,r);
+
+    return root;
+
 }
 
-const newTree = (unorderedArray) => {
-    let arr = noDuplicates(unorderedArray);
+
+/* Have a Class or Constructor, for Trees!*/
+
+const newTree = numbers => {
+    let arr = noDuplicates(numbers);
     sort.mergeSort(arr, arr.length-1,0);
     let treeRoot = buildTree(arr,0, arr.length-1);
 
+    const find = (val , root = treeRoot )=>{
+        if (val === root.data){
+            console.log("Data already in tree!")
+            return true
+        }
+
+        if(val > root.data && root.right !== null){
+            return find(val,root.right)
+        }else if(val < root.data && root.left !== null){
+            return find(val,root.left)
+        }
+        return false
+    }
     const insert = (val,root = treeRoot) => {
+        if (find(val,root)) return null
         if(val < root.data){
             if(root.left === null){
                 return root.left = newNode(val);
@@ -33,7 +70,7 @@ const newTree = (unorderedArray) => {
                 return insert(val,root.left);
             }
         }else{
-            if(root.right=== null){
+            if(root.right === null){
                 return root.right = newNode(val);
             }else{
                 return insert(val,root.right);
@@ -41,28 +78,33 @@ const newTree = (unorderedArray) => {
         }
     }
 
-    const remove = (val, root = treeRoot) =>{
-        //Si el valor es menor, voy para izquierda
-        //Si el valor es mayor voy para derecha
-        //Si el root actual equivale al valor, lo elimino.
-        //Pero tengo que mantener el arbol conectado
+    const remove = (val, root = treeRoot, prev = null) =>{
+        if(root.data === val){
+            if(root.right === null){
+                root = root.left
+                prev.left = root
+                console.log(prev)
+                return true
+            }else{
+                // Find successor
+            }
+        }else{
+            if(val > root.data && root.right !== null){
+                return remove(val,root.right,root)
+            }else if(val < root.data && root.left !== null){
+                return remove(val,root.left,root)
+            }
+            console.log("The number you want to remove doesn't exist")
+            return false
+        }
     }
 
-    return {treeRoot, insert, remove}
+    return {treeRoot, insert, find, remove}
 }
 
-function buildTree (arr,l,r) {
-    if (l > r) return null;
-    let mid = l + parseInt(((r-l)/2));
-    let root = newNode(arr[mid]);
-    root.left = buildTree(arr,l,mid-1);
-    root.right = buildTree(arr,mid+1,r);
-    return root;
 
-}
 
-let test = newTree([1,2,5,4,6,7,8,9,3,2,4,12,13,14,15,65,76,87,98,13,5432,2356,432,5,1,2,3,-123,-123,-12]);
-
+/* Print the tree on console */
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
     if (node.right !== null) {
@@ -74,6 +116,8 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     }
 }
 
-prettyPrint(test.treeRoot)
-
-
+let ejemplo = [1,2,3,4,5,6,7,8,9]
+let arbol = newTree(ejemplo)
+arbol.remove(1)
+arbol.remove(4)
+//prettyPrint(arbol.treeRoot)
